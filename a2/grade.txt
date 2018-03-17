@@ -1,0 +1,128 @@
+Grade: 37.00/50.00
+
+3 Deduction(s):
+
+--------------
+#1: 3.00 points
+Failing test: test_classify_3: 
+        @points=3
+        
+Traceback (most recent call last):
+  File "../assignments-sol/a2/a2_test.py", line 148, in test_classify_3
+    self.assertEqual(top_c[0][0], 'token=great')
+AssertionError: 'token=bad' != 'token=great'
+- token=bad
++ token=great
+
+
+source:
+    def test_classify_3(self):
+         """
+         @points=3
+         """
+         docs = np.array(["Isn't this movie great?", "Horrible, horrible movie",
+                          "Isn't this movie great?", "Horrible, horrible movie",
+                          'i LOVE this great movie', 'i LOVE this wonderful movie',
+                          'i hate this bad movie', 'i hate this horrible movie'])
+         labels = np.array([1, 0, 1, 0, 1, 1, 0, 0])
+         tokens_list = [tokenize(d) for d in docs]
+         feature_fns = [token_features]
+         X, vocab = vectorize(tokens_list, feature_fns, min_freq=1)
+         feature_fns = [token_features, lexicon_features]
+         clf = LogisticRegression()
+         clf.fit(X, labels)
+         top_c = top_coefs(clf, 1, 2, vocab)
+         self.assertEqual(top_c[0][0], 'token=great')
+ 
+         predictions = clf.predict(X)
+         self.assertEqual(round(accuracy_score(labels, predictions), 1), 1.0)
+--------------
+
+--------------
+#2: 5.00 points
+Failing test: test_token_pair_features: 
+        @points=5
+        
+Traceback (most recent call last):
+  File "../assignments-sol/a2/a2_test.py", line 50, in test_token_pair_features
+    [('token_pair=a__b', 1), ('token_pair=a__c', 1), ('token_pair=a__d', 1), ('token_pair=b__c', 2), ('token_pair=b__d', 2), ('token_pair=b__e', 1), ('token_pair=c__d', 2), ('token_pair=c__e', 1), ('token_pair=d__e', 1)])
+AssertionError: Lists differ: [('to[52 chars]pair=b__c', 2), ('token_pair=b__d', 1), ('token_pair=c__d', 1)] != [('to[52 chars]pair=a__d', 1), ('token_pair=b__c', 2), ('toke[108 chars], 1)]
+
+First differing element 2:
+('token_pair=b__c', 2)
+('token_pair=a__d', 1)
+
+Second list contains 4 additional elements.
+First extra element 5:
+('token_pair=b__e', 1)
+
+  [('token_pair=a__b', 1),
+   ('token_pair=a__c', 1),
++  ('token_pair=a__d', 1),
+   ('token_pair=b__c', 2),
+-  ('token_pair=b__d', 1),
+?                      ^
+
++  ('token_pair=b__d', 2),
+?                      ^
+
++  ('token_pair=b__e', 1),
+-  ('token_pair=c__d', 1)]
+?                      ^ ^
+
++  ('token_pair=c__d', 2),
+?                      ^ ^
+
++  ('token_pair=c__e', 1),
++  ('token_pair=d__e', 1)]
+
+source:
+    def test_token_pair_features(self):
+         """
+         @points=5
+         """
+         feats = defaultdict(lambda: 0)
+         token_pair_features(np.array(['a', 'b', 'c', 'd']), feats)
+         self.assertListEqual(sorted(feats.items()),
+                              [('token_pair=a__b', 1), ('token_pair=a__c', 1), ('token_pair=b__c', 2), ('token_pair=b__d', 1), ('token_pair=c__d', 1)])
+ 
+         feats = defaultdict(lambda: 0)
+         token_pair_features(np.array(['a', 'b', 'c', 'd', 'e']), feats, k=4)
+         self.assertListEqual(sorted(feats.items()),
+                              [('token_pair=a__b', 1), ('token_pair=a__c', 1), ('token_pair=a__d', 1), ('token_pair=b__c', 2), ('token_pair=b__d', 2), ('token_pair=b__e', 1), ('token_pair=c__d', 2), ('token_pair=c__e', 1), ('token_pair=d__e', 1)])
+--------------
+
+--------------
+#3: 5.00 points
+Failing test: test_vectorize_2: 
+        @points=5
+        
+Traceback (most recent call last):
+  File "../assignments-sol/a2/a2_test.py", line 95, in test_vectorize_2
+    [1])
+AssertionError: Lists differ: [1, 0, 1, 1, 1, 1] != [1]
+
+First list contains 5 additional elements.
+First extra element 1:
+0
+
+- [1, 0, 1, 1, 1, 1]
++ [1]
+
+source:
+    def test_vectorize_2(self):
+         """
+         @points=5
+         """
+         docs = ["Isn't this movie great?", "Horrible, horrible movie"]
+         tokens_list = [tokenize(d) for d in docs]
+         feature_fns = [token_features]
+         X, vocab = vectorize(tokens_list, feature_fns, min_freq=2)
+         self.assertListEqual(list(X.toarray()[0]),
+                              [1])
+         self.assertListEqual(list(X.toarray()[1]),
+                              [1])
+         self.assertListEqual(sorted(vocab.items(), key=lambda x: x[1]),
+                              [('token=movie', 0)])
+--------------
+

@@ -1,0 +1,9 @@
+Number of users collected: 4466
+Number of messages collected: 1096
+Number of communities discovered: 2
+Average number of users per community: 2233.000000
+Number of instances per class found: 385 positive instances , 134 negative instances and 3 mixed instances
+One example from each class: 
+Example of positive class:@selenagomez Good Night and Sweet Dreams Selena Marie Gomez I love you wit all my heart your the most beautiful angel in the world AMEN
+Example of negative class:@taylorswift13 i heard drake been fucked in ass in cage for doing nasty faces to peoples
+Example of mixed class:RT @TheGhermGuys: Dannnng @Chris3dd you were in #Nashville @3doorsdown #3doorsdown you didnt tell us??? -GG
